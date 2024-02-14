@@ -18,10 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex bg-black text-white`}>
-        <ControlPanel />
-        {children}
-        <FollowPanel />
+      <body className={`${inter.className}  bg-black text-white`}>
+        <div className="max-w-[90rem] mx-auto flex">
+          <ControlPanel />
+          {children}
+          <FollowPanel />
+        </div>
       </body>
     </html>
   );

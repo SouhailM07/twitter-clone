@@ -1,7 +1,11 @@
+// components
+import TweetPanel from "@/components/TweetPanel/TweetPanel";
+
 export default function Home() {
   return (
-    <main className="flex w-full min-h-screen items-center justify-center ">
-      <p>sb</p>
+    <main className="w-full min-h-screen border border-gray-600">
+      <h1 className="route__title ">Home</h1>
+      <TweetPanel />
     </main>
   );
 }

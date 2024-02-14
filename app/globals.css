@@ -5,6 +5,11 @@
 html {
   @apply text-[13.5px];
 }
+
+.route__title {
+  @apply text-[1.3rem] p-4 font-bold border-b border-gray-600;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
