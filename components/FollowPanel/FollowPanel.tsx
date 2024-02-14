@@ -1,4 +1,8 @@
 import "./followpanel.css";
 export default function FollowPanel() {
-  return <>FollowPanel</>;
+  return (
+    <>
+      <article>FollowPanel</article>
+    </>
+  );
 }

@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#ControlPanel {
+  @apply bg-transparent min-w-[18rem] p-[1.5rem] space-y-[1.5rem];
+}
+
+#ControlPanel ul li {
+  @apply flex items-center space-x-[1.5rem] cursor-pointer;
+}
+
+#ControlPanel ul li:nth-child(4) img {
+  @apply rotate-180;
+}

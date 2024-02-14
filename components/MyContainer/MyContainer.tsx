@@ -1,4 +1,8 @@
 import "./mycontainer.css";
 export default function MyContainer() {
-  return <>MyContainer</>;
+  return (
+    <>
+      <div>MyContainer</div>
+    </>
+  );
 }
