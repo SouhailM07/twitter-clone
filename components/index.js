@@ -6,3 +6,4 @@ export { default as TweetPanel } from "./TweetPanel/TweetPanel";
 export { default as WelcomePanel } from "./WelcomePanel/WelcomePanel";
 export { default as LoginPanel } from "./LoginPanel/LoginPanel";
 export { default as SignInPanel } from "./SignInPanel/SignInPanel";
+export { default as EditProfilePanel } from "./EditProfilePanel/EditProfilePanel";
