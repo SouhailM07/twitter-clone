@@ -5,7 +5,16 @@
 html {
   @apply text-[13.5px];
 }
+.inputPanel {
+  @apply bg-[#2e2d2da8] absolute top-0 left-0 w-full h-full flex items-center justify-center;
+}
 
+.inputPanel__panel {
+  @apply bg-black min-h-[10rem] rounded-lg w-[40rem] p-[2rem];
+}
+.inputPanel__panel__container {
+  @apply flex justify-between items-center text-[1.3rem];
+}
 .userDetails {
   @apply text-gray-500;
 }

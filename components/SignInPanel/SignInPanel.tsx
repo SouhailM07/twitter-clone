@@ -50,9 +50,9 @@ export default function SignInPanel() {
   };
   return (
     <>
-      <article className="bg-[#2e2d2da8] absolute top-0 left-0 w-full h-full flex items-center justify-center">
-        <section className="bg-black min-h-[10rem] rounded-lg w-[40rem] p-[2rem]">
-          <div className="flex justify-between items-center text-[1.3rem] ">
+      <article className="inputPanel">
+        <section className="inputPanel__panel">
+          <div className="inputPanel__panel__container ">
             <h1 className="text-[2.4rem] font-bold">Create an account</h1>
             <Image
               onClick={handleClose}

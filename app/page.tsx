@@ -15,16 +15,16 @@ export default function Home() {
   let { userInformation_f } = userInfoStore((state) => state);
   let initial_getUserData = async () => {
     console.log("check render");
-    let userInfo = account
+    account
       .get()
       .then(async (res) => {
         toggleUserLoggedIn(true);
-        //  userInformation_f(res);
         await db
           .listDocuments(appwriteKeys.db_id!, appwriteKeys.usersCollectionId!, [
             Query.equal("email", [res.email]),
           ])
           .then((res) => {
+            console.log(res);
             userInformation_f(res.documents["0"]);
             console.log(res.documents);
           });
