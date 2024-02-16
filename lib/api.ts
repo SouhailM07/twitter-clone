@@ -33,3 +33,30 @@ export async function createNewUser(user) {
     console.log(error);
   }
 }
+
+export async function userLogin(user) {
+  try {
+    // check if user exist
+    const userExist = await db.listDocuments(
+      appwriteKeys.db_id!,
+      appwriteKeys.usersCollectionId!,
+      [Query.equal("email", [user.email])]
+    );
+    if (userExist.total < 1) {
+      return "user does not exist";
+    } else {
+      let loggedUser: any = await account
+        .createEmailSession(user.email, user.password)
+        .then(() => {
+          return "access";
+        });
+      return loggedUser;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function logout() {
+  await account.deleteSession("current");
+}

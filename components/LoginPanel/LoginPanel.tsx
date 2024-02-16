@@ -16,6 +16,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+// appwrite
+import { userLogin } from "@/lib/api";
+import { useToast } from "../ui/use-toast";
 // zustand
 import toggleStore from "@/zustand/toggleStore";
 // assets
@@ -75,6 +78,8 @@ export default function LoginPanel() {
 /*===============================================================================================*/
 
 const Login = () => {
+  // zustand
+  let { toggleUserLoggedIn, toggleLogin_f } = toggleStore((state) => state);
   // 1 Defining form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -84,8 +89,27 @@ const Login = () => {
     },
   });
   // 2 Submit function
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  let { toast } = useToast();
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    await userLogin(values).then((res) => {
+      if (res == "user does not exist") {
+        toast({
+          variant: "destructive",
+          description: "user does not exist !",
+        });
+      } else if (res == "access") {
+        toast({
+          description: "welcome back",
+        });
+        toggleUserLoggedIn(true);
+        toggleLogin_f(false);
+      } else {
+        toast({
+          variant: "destructive",
+          description: "wrong password",
+        });
+      }
+    });
   };
   const inputs: inputs[] = [
     { name: "email", placeholder: "Email", inputType: "string" },
