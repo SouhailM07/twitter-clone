@@ -1,5 +1,6 @@
 "use client";
 import "./controlpanel.css";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 // ? types
 import { navLinks } from "@/types";
@@ -16,15 +17,32 @@ import toggleStore from "@/zustand/toggleStore";
 
 export default function ControlPanel() {
   let { toggleUserLoggedIn } = toggleStore((state) => state);
+  let router = useRouter();
+  let profileFunction = () => {
+    if (toggleUserLoggedIn) router.push("/profile");
+  };
+  let homeFunction = () => {
+    router.push("/");
+  };
   let navLinks: navLinks[] = [
-    { img: home_logo, label: "Home", link: "", navFunction: "" },
+    {
+      img: home_logo,
+      label: "Home",
+      link: "",
+      navFunction: () => homeFunction(),
+    },
     {
       img: notification_logo,
       label: "Notifications",
       link: "",
       navFunction: "",
     },
-    { img: profile_logo, label: "Profile", link: "", navFunction: "" },
+    {
+      img: profile_logo,
+      label: "Profile",
+      link: "",
+      navFunction: () => profileFunction(),
+    },
     {
       img: logout_logo,
       label: "Logout",

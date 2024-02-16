@@ -6,6 +6,10 @@ html {
   @apply text-[13.5px];
 }
 
+.userDetails {
+  @apply text-gray-500;
+}
+
 .route__title {
   @apply text-[1.3rem] p-4 font-bold border-b border-gray-600;
 }

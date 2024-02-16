@@ -20,6 +20,7 @@ export async function createNewUser(user) {
         ID.unique(),
         {
           name: user.name,
+          username: user.username,
           email: user.email,
         }
       );

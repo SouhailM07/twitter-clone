@@ -26,7 +26,14 @@ import Image from "next/image";
 import close_logo from "@/public/xmark-solid.svg";
 
 const formSchema = z.object({
-  name: z.string().min(3, { message: "must be at least 3 letter or more" }),
+  name: z
+    .string()
+    .min(3, { message: "must be at least 3 letter or more" })
+    .max(20, { message: "must be under 20 letters" }),
+  username: z
+    .string()
+    .min(3, { message: "must be at least 3 letter or more" })
+    .max(64, { message: "must be under 64 letters" }),
   email: z.string().email({ message: "Invalid Email" }),
   password: z.string().min(7, { message: "wrong password" }),
 });
@@ -112,6 +119,7 @@ const SignIn = () => {
   };
   const inputs: inputs[] = [
     { name: "name", placeholder: "name", inputType: "string" },
+    { name: "username", placeholder: "username", inputType: "string" },
     { name: "email", placeholder: "Email", inputType: "string" },
     { name: "password", placeholder: "password", inputType: "password" },
   ];
