@@ -1,5 +1,7 @@
 "use client";
 import "./signinpanel.css";
+// appwrite
+import { createNewUser } from "@/lib/api";
 // ? types
 import { inputs } from "@/types";
 // form
@@ -16,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "../ui/use-toast";
 // zustand
 import toggleStore from "@/zustand/toggleStore";
 // assets
@@ -25,7 +28,7 @@ import close_logo from "@/public/xmark-solid.svg";
 const formSchema = z.object({
   name: z.string().min(3, { message: "must be at least 3 letter or more" }),
   email: z.string().email({ message: "Invalid Email" }),
-  password: z.string().min(8, { message: "wrong password" }),
+  password: z.string().min(7, { message: "wrong password" }),
 });
 
 /*===============================================================================================*/
@@ -61,7 +64,7 @@ export default function SignInPanel() {
               onClick={handleSwitchPanel}
               className="text-white font-bold"
             >
-              Sign in
+              Login
             </button>
           </p>
         </section>
@@ -75,6 +78,7 @@ export default function SignInPanel() {
 /*===============================================================================================*/
 
 const SignIn = () => {
+  let { toggleSignIn_f } = toggleStore((state) => state);
   // 1 Defining form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -84,8 +88,27 @@ const SignIn = () => {
     },
   });
   // 2 Submit function
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  let { toast } = useToast();
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    await createNewUser(values).then((res) => {
+      if (res == "user exist") {
+        // toast.error("user exist !");
+        toast({
+          variant: "destructive",
+          description: "user is already exist",
+        });
+      } else if (res == "access") {
+        toast({
+          description: "your account was created",
+        });
+        toggleSignIn_f(false);
+      } else {
+        toast({
+          variant: "destructive",
+          description: "something went wrong",
+        });
+      }
+    });
   };
   const inputs: inputs[] = [
     { name: "name", placeholder: "name", inputType: "string" },
@@ -108,6 +131,7 @@ const SignIn = () => {
                 <FormItem>
                   <FormControl>
                     <Input
+                      type={e.inputType}
                       className="bg-transparent border indent-[1rem] text-[1.1rem] py-[1.6rem] border-gray-400"
                       placeholder={e.placeholder}
                       {...field}

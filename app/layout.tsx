@@ -4,6 +4,8 @@ import "./globals.css";
 // components
 import ControlPanel from "@/components/ControlPanel/ControlPanel";
 import FollowPanel from "@/components/FollowPanel/FollowPanel";
+//
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +25,7 @@ export default function RootLayout({
           <ControlPanel />
           {children}
           <FollowPanel />
+          <Toaster />
         </div>
       </body>
     </html>
