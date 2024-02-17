@@ -47,9 +47,10 @@ export default function ControlPanel() {
       img: logout_logo,
       label: "Logout",
       link: "",
-      navFunction: () => {
-        toggleUserLoggedIn(false);
-        logout();
+      navFunction: async () => {
+        console.log("logout");
+        await toggleUserLoggedIn(false);
+        await logout();
       },
     },
   ];
@@ -57,7 +58,7 @@ export default function ControlPanel() {
     <>
       <aside id="ControlPanel">
         <Image src={twitter_logo} alt="logo" height={32} width={32} />
-        <ul className="space-y-[2rem] text-[1.2rem]">
+        <ul className="space-y-[1.5rem] text-[1.2rem]">
           {navLinks.map((e, i) => {
             return (
               <NavLink
@@ -78,7 +79,7 @@ export default function ControlPanel() {
 let NavLink = ({ img, label, link, navFunction }: navLinks) => {
   return (
     <>
-      <li>
+      <li className="hover:bg-gray-600 px-[1rem] h-[3.3rem] flex items-center rounded-full">
         <Image src={img} alt="logo" height={25} width={25} />
         <p onClick={() => navFunction()}>{label}</p>
       </li>

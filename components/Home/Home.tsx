@@ -1,4 +1,12 @@
 import "./home.css";
-export default function Home() {
-  return <><div>Home</div></>;
+// components
+import TweetPanel from "@/components/TweetPanel/TweetPanel";
+import Tweet from "../Tweet/Tweet";
+export default function HomeContainer() {
+  return (
+    <>
+      <TweetPanel />
+      <Tweet />
+    </>
+  );
 }

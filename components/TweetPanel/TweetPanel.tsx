@@ -4,6 +4,12 @@ import "./tweetpanel.css";
 import { useState } from "react";
 // zustand
 import userInfoStore from "@/zustand/userInfoStore";
+import postsStore from "@/zustand/postsStore";
+// appwrite
+import { account, db, appwriteKeys } from "@/appwrite";
+import { ID } from "appwrite";
+// shadcn-ui
+import { useToast } from "../ui/use-toast";
 // assets
 import Image from "next/image";
 import default_avatar from "@/public/newUserImage.png";
@@ -15,6 +21,42 @@ export default function TweetPanel() {
     setTweet(e.target.value);
     if (e.target.value.length) setAllowPost(true);
     else setAllowPost(false);
+  };
+  let { toast } = useToast();
+  let { editPosts } = postsStore((state) => state);
+  let handlePost = async () => {
+    if (tweet.length > 0) {
+      await db
+        .createDocument(
+          appwriteKeys.db_id!,
+          appwriteKeys.postsCollectionId!,
+          ID.unique(),
+          {
+            textPost: tweet,
+            user: userInformation?.$id,
+          }
+        )
+        .then(
+          async () =>
+            await db
+              .listDocuments(
+                appwriteKeys.db_id!,
+                appwriteKeys.postsCollectionId!
+              )
+              .then((res) => {
+                editPosts(res.documents);
+                setTweet("");
+              })
+              .then(() => toast({ description: "your post was sent" }))
+              .catch((err) => {
+                console.log(err);
+                toast({
+                  variant: "destructive",
+                  description: "something went wrong",
+                });
+              })
+        );
+    }
   };
   return (
     <>
@@ -39,7 +81,7 @@ export default function TweetPanel() {
         </div>
         <div className="flex justify-end">
           <button
-            onClick={() => console.log(tweet)}
+            onClick={handlePost}
             className={`${
               allowPost ? "bg-btnColor__active" : "bg-btnColor__disable"
             } px-[1.4rem] py-[0.6rem]  rounded-full`}

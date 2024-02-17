@@ -7,6 +7,7 @@ export const appwriteKeys = {
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
   db_id: process.env.NEXT_PUBLIC_DB_ID,
   usersCollectionId: process.env.NEXT_PUBLIC_USERS_COLLECTION,
+  postsCollectionId: process.env.NEXT_PUBLIC_POSTS_COLLECTION
 };
 
 client.setEndpoint(appwriteKeys.endPointId).setProject(appwriteKeys.projectId);
