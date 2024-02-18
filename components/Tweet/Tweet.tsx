@@ -1,70 +1,130 @@
 "use client";
 import "./tweet.css";
 // zustand
-import postsStore from "@/zustand/postsStore";
+import userInfoStore from "@/zustand/userInfoStore";
+// appwrite
+import { appwriteKeys, db } from "@/appwrite";
+import { ID } from "appwrite";
 // assets
 import Image from "next/image";
-import like_logo_active from "@/public/heart-regular.svg";
-import like_logo_disable from "@/public/heart-solid.svg";
+import like_logo_disable from "@/public/heart-regular.svg";
+import like_logo_active from "@/public/heart-solid.svg";
 import reply_logo from "@/public/comment-dots-regular.svg";
-// appwrite
-import { db, appwriteKeys } from "@/appwrite";
-// import { Query } from "appwrite";
-import { useEffect } from "react";
+import postsStore from "@/zustand/postsStore";
+import edit_logo from "@/public/ellipsis-vertical-solid.svg";
 
-export default function Tweet() {
-  let { posts, editPosts } = postsStore((state) => state);
+/*===============================================================================================*/
+// main component section
+/*===============================================================================================*/
+
+export default function Tweet({ post, userId }) {
+  let { editPosts } = postsStore((state) => state);
+  let { userInformation } = userInfoStore((state) => state);
+
+  // ! check if the user did liked this post before
+  let checkedLike = () => {
+    let didUserLiked = userId.likes.filter((e) => {
+      return e.userId === userInformation.$id;
+    });
+    if (didUserLiked.length > 0) {
+      return true;
+    } else if (didUserLiked.length == 0) {
+      return false;
+    }
+  };
   let getPosts = async () => {
     await db
       .listDocuments(appwriteKeys.db_id!, appwriteKeys.postsCollectionId!)
       .then((res) => {
         editPosts(res.documents);
-        console.log(res);
+        // console.log(res);
       });
   };
-  useEffect(() => {
-    getPosts();
-  }, []);
+
+  let handleLike = async () => {
+    if (!checkedLike() && post?.user.$id !== userInformation.$id) {
+      await db
+        .createDocument(
+          appwriteKeys.db_id!,
+          appwriteKeys.likesCollectionId!,
+          ID.unique(),
+          {
+            post: userId.$id,
+            userId: userInformation.$id,
+          }
+        )
+        .then(() => getPosts());
+    } else if (checkedLike()) {
+      await db
+        .getDocument(
+          appwriteKeys.db_id!,
+          appwriteKeys.postsCollectionId!,
+          post?.$id
+        )
+        .then(async (res) => {
+          return res?.likes.filter((e) => {
+            return e.userId === userInformation.$id;
+          });
+        })
+        .then(async (res) => {
+          await db.deleteDocument(
+            appwriteKeys.db_id!,
+            appwriteKeys.likesCollectionId!,
+            res[0].$id
+          );
+        })
+        .then(() => getPosts());
+    }
+  };
   return (
     <>
-      {posts?.map((e, i) => {
-        return (
-          <div key={i} className="flex pl-[1.5rem] hover:bg-gray-900 py-[1rem]">
-            <div className="h-[3rem] w-[3rem] border-2 rounded-full mr-[1rem]"></div>
-            {/*  */}
-            <div className="">
-              {/* stage 1 */}
-              <div className="flex space-x-[1rem] items-center">
-                <h1 className="font-bold text-[1.2rem]">{e?.user?.name}</h1>
-                <p className="userDetails">@{e?.user?.username}</p>
-                <span className="userDetails">
-                  {formatTimeAgo(e?.user?.$updatedAt)}
-                </span>
-              </div>
-              {/*stage 2 */}
-              <div className="mt-[1.2rem] mb-[1.4rem]">
-                <p>{e?.textPost}</p>
-              </div>
-              {/* stage 3 */}
-              <div className="flex space-x-[3.3rem]">
-                <button className="flex space-x-[0.7rem]">
-                  <Image src={reply_logo} alt="logo" height={20} width={20} />
-                  <span>0</span>
-                </button>
-                <button className="flex space-x-[0.7rem]">
-                  <Image
-                    src={like_logo_active}
-                    alt="logo"
-                    height={20}
-                    width={20}
-                  />
-                  <span>{e?.likes}</span>
-                </button>
-              </div>
-            </div>
+      <li className="flex pl-[1.5rem] hover:bg-gray-900 py-[1rem]">
+        <div className="h-[3rem] w-[3rem] border-2 rounded-full mr-[1rem]"></div>
+        {/*  */}
+        <div className="">
+          {/* stage 1 */}
+          <div className="flex space-x-[1rem] items-center">
+            <h1 className="font-bold text-[1.2rem]">{post?.user?.name}</h1>
+            <p className="userDetails">@{post?.user?.username}</p>
+            <span className="userDetails">
+              {formatTimeAgo(post?.user?.$updatedAt)}
+            </span>
+            {post?.user.$id == userInformation.$id && (
+              <Image
+                onClick={() => alert("hello")}
+                role="button"
+                alt="logo"
+                aria-label="open the edit post tab"
+                src={edit_logo}
+                height={6}
+                width={6}
+                className="self-end border-2 border-gray-600"
+              />
+            )}
           </div>
-        );
-      })}
+          {/*stage 2 */}
+          <div className="mt-[1.2rem] mb-[1.4rem]">
+            <p>{post?.textPost}</p>
+          </div>
+          {/* stage 3 */}
+          <div className="flex space-x-[3.3rem]">
+            <button className="flex space-x-[0.7rem]">
+              <Image src={reply_logo} alt="logo" height={20} width={20} />
+              <span>0</span>
+            </button>
+            <button className="flex space-x-[0.7rem]">
+              <Image
+                onClick={handleLike}
+                src={checkedLike() ? like_logo_active : like_logo_disable}
+                alt="logo"
+                height={20}
+                width={20}
+              />
+              <span>{post?.likes.length}</span>
+            </button>
+          </div>
+        </div>
+      </li>
     </>
   );
 }

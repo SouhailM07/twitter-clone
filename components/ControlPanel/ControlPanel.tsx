@@ -79,9 +79,12 @@ export default function ControlPanel() {
 let NavLink = ({ img, label, link, navFunction }: navLinks) => {
   return (
     <>
-      <li className="hover:bg-gray-600 px-[1rem] h-[3.3rem] flex items-center rounded-full">
+      <li
+        onClick={() => navFunction()}
+        className="hover:bg-gray-600 px-[1rem] h-[3.3rem] flex items-center rounded-full"
+      >
         <Image src={img} alt="logo" height={25} width={25} />
-        <p onClick={() => navFunction()}>{label}</p>
+        <p>{label}</p>
       </li>
     </>
   );
