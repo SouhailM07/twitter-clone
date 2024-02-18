@@ -1,7 +1,10 @@
 "use client";
+
 import "./tweet.css";
+import { useRouter } from "next/navigation";
 // zustand
 import userInfoStore from "@/zustand/userInfoStore";
+import repliesStore from "@/zustand/repliesStore";
 // appwrite
 import { appwriteKeys, db } from "@/appwrite";
 import { ID } from "appwrite";
@@ -18,9 +21,10 @@ import edit_logo from "@/public/ellipsis-vertical-solid.svg";
 /*===============================================================================================*/
 
 export default function Tweet({ post, userId }) {
+  let router = useRouter();
   let { editPosts } = postsStore((state) => state);
   let { userInformation } = userInfoStore((state) => state);
-
+  let { editSelectedReply, editReplyUserId } = repliesStore((state) => state);
   // ! check if the user did liked this post before
   let checkedLike = () => {
     let didUserLiked = userId.likes.filter((e) => {
@@ -37,10 +41,17 @@ export default function Tweet({ post, userId }) {
       .listDocuments(appwriteKeys.db_id!, appwriteKeys.postsCollectionId!)
       .then((res) => {
         editPosts(res.documents);
+
         // console.log(res);
       });
   };
-
+  let handleReply = async () => {
+    await editSelectedReply(post);
+    await editReplyUserId(userId);
+    console.log(post);
+    //
+    router.push("/replies");
+  };
   let handleLike = async () => {
     if (!checkedLike() && post?.user.$id !== userInformation.$id) {
       await db
@@ -110,7 +121,7 @@ export default function Tweet({ post, userId }) {
           </div>
           {/* stage 3 */}
           <div className="flex space-x-[3.3rem]">
-            <button className="flex space-x-[0.7rem]">
+            <button onClick={handleReply} className="flex space-x-[0.7rem]">
               <Image src={reply_logo} alt="logo" height={20} width={20} />
               <span>0</span>
             </button>
