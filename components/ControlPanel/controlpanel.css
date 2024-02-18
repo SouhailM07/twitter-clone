@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 #ControlPanel {
-  @apply bg-transparent min-w-[18rem] p-[1.5rem] space-y-[1.5rem];
+  @apply bg-transparent self-start min-w-[18rem] p-[1.5rem] space-y-[1.5rem] sticky top-0;
 }
 
 #ControlPanel ul li {

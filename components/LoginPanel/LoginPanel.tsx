@@ -27,7 +27,7 @@ import close_logo from "@/public/xmark-solid.svg";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid Email" }),
-  password: z.string().min(8, { message: "wrong password" }),
+  password: z.string().min(8, { message: "Invalid password" }),
 });
 
 /*===============================================================================================*/
@@ -131,6 +131,7 @@ const Login = () => {
                 <FormItem>
                   <FormControl>
                     <Input
+                      type={e.inputType}
                       className="bg-transparent hover:text-white border indent-[1rem] text-[1.1rem] py-[1.6rem] border-gray-400"
                       placeholder={e.placeholder}
                       {...field}

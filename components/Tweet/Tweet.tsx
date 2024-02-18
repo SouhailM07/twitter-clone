@@ -78,17 +78,19 @@ export default function Tweet({ post, userId }) {
   };
   return (
     <>
-      <li className="flex pl-[1.5rem] hover:bg-gray-900 py-[1rem]">
-        <div className="h-[3rem] w-[3rem] border-2 rounded-full mr-[1rem]"></div>
+      <li className="flex px-[1.5rem] hover:bg-gray-900 py-[1rem] border border-gray-500">
+        <div className="h-[3rem] min-w-[3rem] border-2 rounded-full mr-[1rem]"></div>
         {/*  */}
-        <div className="">
+        <div className="w-full">
           {/* stage 1 */}
-          <div className="flex space-x-[1rem] items-center">
-            <h1 className="font-bold text-[1.2rem]">{post?.user?.name}</h1>
-            <p className="userDetails">@{post?.user?.username}</p>
-            <span className="userDetails">
-              {formatTimeAgo(post?.user?.$updatedAt)}
-            </span>
+          <div className="flex justify-between">
+            <div className="flex space-x-[1rem] items-center w-full">
+              <h1 className="font-bold text-[1.2rem]">{post?.user?.name}</h1>
+              <p className="userDetails">@{post?.user?.username}</p>
+              <span className="userDetails">
+                {formatTimeAgo(post?.user?.$updatedAt)}
+              </span>
+            </div>
             {post?.user.$id == userInformation.$id && (
               <Image
                 onClick={() => alert("hello")}
@@ -96,9 +98,9 @@ export default function Tweet({ post, userId }) {
                 alt="logo"
                 aria-label="open the edit post tab"
                 src={edit_logo}
-                height={6}
-                width={6}
-                className="self-end border-2 border-gray-600"
+                height={10}
+                width={10}
+                className="h-[1.7rem] min-w-[1.7rem] rounded-full border-2 border-gray-600"
               />
             )}
           </div>

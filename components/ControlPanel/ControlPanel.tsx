@@ -16,10 +16,10 @@ import { logout } from "@/lib/api";
 import toggleStore from "@/zustand/toggleStore";
 
 export default function ControlPanel() {
-  let { toggleUserLoggedIn } = toggleStore((state) => state);
+  let { toggleUserLoggedIn, userLoggedIn } = toggleStore((state) => state);
   let router = useRouter();
   let profileFunction = () => {
-    if (toggleUserLoggedIn) router.push("/profile");
+    if (userLoggedIn) router.push("/profile");
   };
   let homeFunction = () => {
     router.push("/");
@@ -43,17 +43,12 @@ export default function ControlPanel() {
       link: "",
       navFunction: () => profileFunction(),
     },
-    {
-      img: logout_logo,
-      label: "Logout",
-      link: "",
-      navFunction: async () => {
-        console.log("logout");
-        await toggleUserLoggedIn(false);
-        await logout();
-      },
-    },
   ];
+  let handleLogout = async () => {
+    console.log("logout");
+    await toggleUserLoggedIn(false);
+    await logout();
+  };
   return (
     <>
       <aside id="ControlPanel">
@@ -70,6 +65,16 @@ export default function ControlPanel() {
               />
             );
           })}
+          {/* logout btn */}
+          {userLoggedIn && (
+            <li
+              onClick={handleLogout}
+              className="hover:bg-gray-600 flex px-[1rem] h-[3.3rem]  items-center rounded-full"
+            >
+              <Image src={logout_logo} alt="logo" height={25} width={25} />
+              <p>Logout</p>
+            </li>
+          )}
         </ul>
       </aside>
     </>
